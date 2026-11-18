@@ -1,0 +1,8 @@
+# torch dan torchvision sudah tersedia di Google Colab; pasang sendiri bila di tempat lain
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+numpy
+pillow
+pillow-heif
+trustmark==0.9.2

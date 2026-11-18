@@ -1,0 +1,21 @@
+{
+ "_note": "Salinan parameter dari calibration_protocol_locked.json (STEP 11G, 2026-11-10). Jangan diubah tanpa kalibrasi ulang.",
+ "status": "LOCKED_PRELIMINARY_CALIBRATION",
+ "features": ["similarity_top1", "margin_top1_top2"],
+ "model": "regularized_logistic_regression",
+ "C": 0.5,
+ "scaler_mean": [0.8493215701409749, 0.5978015090738024],
+ "scaler_scale": [0.19977869749200522, 0.21465717819203836],
+ "coefficients": [0.9661238232400142, 0.6157026671969372],
+ "intercept": 5.680877233647974,
+ "decision_threshold": 0.8239188648215766,
+ "rules": {
+  "tm_dino_agree": "ACCEPT",
+  "tm_dino_conflict": "ABSTAIN",
+  "tm_missing": "ACCEPT_DINO_IF_SCORE_GE_THRESHOLD",
+  "insufficient_evidence": "ABSTAIN"
+ },
+ "trustmark": {"version": "0.9.2", "model_type": "Q", "encoding": "BCH_5", "mode": "binary", "payload_bits": 61, "payload_schema": 1, "payload_rule": "61 bit pertama SHA-256 berkas foto sumber"},
+ "dinov2": {"model": "dinov2_vits14", "preprocessing": "Resize518_CenterCrop518_ImageNet", "orientation": "EXIF_TRANSPOSE_RGB_FRAME0", "embedding_dimension": 384, "candidate_count": 40},
+ "research_results": {"final_test_images": 120, "accepted": 120, "wrong_accepted": 0, "abstained": 0, "trustmark_mapped_of_240": 29, "limitation": "Only two incorrect DINOv2 predictions. Reliability estimation and threshold are preliminary and statistically uncertain."}
+}

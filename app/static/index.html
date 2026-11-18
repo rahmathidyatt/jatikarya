@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JATIKARYA – Verifikasi Asal Gambar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6F8;--card:#fff;--line:#E2E6EC;--soft:#EEF1F5;--ink:#161A22;--muted:#586172;--accent:#2350C8;--accentSoft:#EAF0FD;--ok:#1E7247;--okSoft:#E7F4EC;--warn:#9A4A06;--warnSoft:#FDF1E3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+h1,h2,.big{font-family:'Space Grotesk',sans-serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1200px;margin:0 auto;padding:32px 20px 48px;display:flex;flex-direction:column;gap:24px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;color:var(--accent)}
+h1{margin:4px 0;font-size:34px}
+.sub{margin:0;color:var(--muted);max-width:640px}
+.status{font-size:13px;padding:8px 12px;border-radius:8px;background:var(--soft);color:var(--muted)}
+.status.ok{background:var(--okSoft);color:#1B5E3C}.status.bad{background:var(--warnSoft);color:#6B4A06}
+nav{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:8px;overflow-x:auto}
+nav button{display:flex;align-items:center;gap:10px;min-height:64px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;text-align:left;cursor:pointer;font:inherit}
+nav button[aria-current]{border-color:var(--accent);background:var(--accentSoft)}
+nav button:disabled{cursor:default;opacity:.65}
+.dot{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;background:var(--soft);color:var(--muted)}
+nav button[aria-current] .dot{background:var(--accent);color:#fff}
+nav button.done .dot{background:var(--okSoft);color:var(--ok)}
+.lbl small{display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.lbl span{font-size:14px;font-weight:600}
+.grid{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+aside,main{background:var(--card);border:1px solid var(--line);border-radius:16px}
+aside{flex:1 1 300px;min-width:0;padding:20px;display:flex;flex-direction:column;gap:14px}
+main{flex:999 1 560px;min-width:0;padding:28px;display:flex;flex-direction:column;gap:22px}
+.cap{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.preview{width:100%;max-height:340px;object-fit:contain;border-radius:10px;background:var(--soft)}
+.ph{height:240px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px}dt{color:var(--muted)}dd{margin:0;word-break:break-all}
+h2{margin:0;font-size:24px}
+.lead{margin:6px 0 0;color:var(--muted);font-size:15px;line-height:1.55}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:180px;border:2px dashed #B9C3D3;border-radius:14px;background:#F8FAFC;cursor:pointer;text-align:center;padding:20px}
+.drop.over{border-color:var(--accent);background:var(--accentSoft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:3px solid #9DB4F0;outline-offset:2px}
+.box{border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.box.ok{background:var(--okSoft)}.box.warn{background:var(--warnSoft)}.box.info{background:var(--soft)}
+.tag{font-size:13px;font-weight:700;letter-spacing:.05em}
+.ok .tag{color:var(--ok)}.warn .tag{color:var(--warn)}
+.big{font-size:24px;font-weight:700}
+.note{margin:0;font-size:13px;color:var(--muted);line-height:1.55;background:var(--bg);border-radius:10px;padding:12px 14px}
+ol.clean{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.check{display:flex;gap:12px}.check i{flex:none;width:26px;height:26px;border-radius:50%;background:var(--okSoft);color:var(--ok);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700}
+.check b{display:block;font-size:15px}.check span{font-size:13px;color:var(--muted);word-break:break-all}
+.cand{display:grid;grid-template-columns:56px 1fr 72px;gap:14px;align-items:center}
+.rank{width:56px;height:56px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--muted)}
+.bar{height:10px;border-radius:6px;background:var(--soft);overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;border-radius:6px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat{background:var(--bg);border-radius:12px;padding:14px 16px}.stat small{font-size:13px;color:var(--muted)}.stat div{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700}
+.gauge{position:relative;height:18px;border-radius:9px;background:var(--soft)}.gauge>i{display:block;height:100%;border-radius:9px}
+.gauge>b{position:absolute;top:-6px;width:3px;height:30px;background:var(--ink);border-radius:2px}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.try{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.try label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+.verdict{border-radius:16px;padding:24px;display:flex;gap:18px;align-items:flex-start}
+.verdict .ic{flex:none;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700}
+.verdict.ok{background:var(--okSoft)}.verdict.ok .ic{background:var(--ok)}
+.verdict.warn{background:var(--warnSoft)}.verdict.warn .ic{background:var(--warn)}
+.verdict h3{margin:4px 0;font-family:'Space Grotesk',sans-serif;font-size:30px;line-height:1.2}
+.recap{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.recap div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:12px;padding:12px 16px;border-top:1px solid var(--soft);font-size:14px}
+.recap div:first-child{border-top:0}.recap span{color:var(--muted)}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--soft);padding-top:18px}
+.btn{min-height:48px;padding:0 20px;border-radius:12px;font:600 15px Inter,sans-serif;cursor:pointer;border:1px solid #C8D0DC;background:#fff;color:var(--ink)}
+.btn.pri{border:0;background:var(--accent);color:#fff}.btn:disabled{opacity:.5;cursor:default}
+.btn.sm{min-height:44px;font-size:13px;padding:0 14px}
+.spin{width:18px;height:18px;border:3px solid #ffffff66;border-top-color:#fff;border-radius:50%;display:inline-block;vertical-align:-3px;margin-right:8px;animation:r 1s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+.err{color:var(--warn);font-size:14px}
+details summary{cursor:pointer;min-height:32px}
+pre{margin:8px 0 0;background:var(--bg);border-radius:10px;padding:12px;white-space:pre-wrap;font:12px 'JetBrains Mono',monospace}
+button:focus-visible{outline:3px solid #9DB4F0;outline-offset:2px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand">JATIKARYA</div>
+    <h1>Verifikasi Asal Gambar</h1>
+    <p class="sub">Unggah gambar hasil edit AI, lalu ikuti enam tahap untuk mengetahui dari foto asli mana gambar itu berasal.</p>
+  </div>
+  <div id="srv" class="status" role="status">Memeriksa server…</div>
+</header>
+
+<nav id="nav" aria-label="Tahapan"></nav>
+
+<div class="grid">
+  <aside>
+    <div class="cap">GAMBAR YANG DIPERIKSA</div>
+    <img id="pv" class="preview" alt="Gambar yang diunggah" hidden>
+    <div id="pvEmpty" class="ph">Belum ada foto</div>
+    <dl>
+      <dt>Nama berkas</dt><dd id="fName">—</dd>
+      <dt>Ukuran</dt><dd id="fSize">—</dd>
+      <dt>Dimensi</dt><dd id="fDims">—</dd>
+    </dl>
+  </aside>
+
+  <main>
+    <section data-step="1">
+      <h2>Tahap 1 · Unggah foto</h2>
+      <p class="lead">Masukkan gambar yang ingin dicek, misalnya foto yang sudah diedit dengan ChatGPT atau Gemini. Sistem mencarinya di antara <b id="nCand">40</b> foto sumber yang terdaftar.</p>
+      <label id="drop" class="drop" style="margin-top:18px">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2350C8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <b>Klik atau seret foto ke sini</b>
+        <span style="font-size:13px;color:#586172">JPG, PNG, atau WEBP · maks. 25 MB</span>
+        <input id="file" type="file" accept="image/*">
+      </label>
+      <p id="err" class="err" hidden></p>
+    </section>
+
+    <section data-step="2" hidden>
+      <h2>Tahap 2 · Persiapan gambar</h2>
+      <p class="lead">Gambar dirapikan dengan cara yang sama persis seperti saat penelitian, supaya hasilnya bisa dibandingkan.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:20px;margin-top:18px">
+        <ol class="clean" style="flex:1 1 320px">
+          <li class="check"><i>✓</i><div><b>Putar sesuai EXIF dan ubah ke RGB</b><span>Orientasi kamera dibetulkan, frame pertama diambil.</span></div></li>
+          <li class="check"><i>✓</i><div><b>Sidik jari berkas (SHA-256)</b><span id="sha" class="mono">—</span></div></li>
+          <li class="check"><i>✓</i><div><b>Ubah ukuran 518 px lalu potong tengah 518 × 518</b><span>Prapemrosesan DINOv2 di penelitian.</span></div></li>
+          <li class="check"><i>✓</i><div><b>Normalisasi warna ImageNet</b><span>Skala piksel disamakan dengan data latih model.</span></div></li>
+        </ol>
+        <figure style="margin:0;flex:0 1 200px">
+          <img id="crop" alt="Potongan tengah persegi" style="width:180px;height:180px;object-fit:cover;border-radius:10px;border:1px solid #E2E6EC">
+          <figcaption style="font-size:12px;color:#586172;margin-top:8px">Bagian tengah yang dibaca DINOv2</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section data-step="3" hidden>
+      <h2>Tahap 3 · Cek watermark (TrustMark)</h2>
+      <p class="lead">Setiap foto sumber diberi watermark tak terlihat berisi kode identitas. Tahap ini mencoba membaca kode itu.</p>
+      <div id="tmBox" class="box" style="margin-top:18px"></div>
+      <details style="font-size:13px;color:#586172;margin-top:12px"><summary>Data mentah watermark</summary><pre id="tmRaw"></pre></details>
+      <p class="note" style="margin-top:12px">Catatan penelitian: dari 240 gambar hasil edit AI, watermark masih bisa dipetakan ke sumbernya pada 29 gambar. Karena itu ada tahap pencocokan visual.</p>
+    </section>
+
+    <section data-step="4" hidden>
+      <h2>Tahap 4 · Pencocokan visual (DINOv2)</h2>
+      <p class="lead">DINOv2 (ViT-S/14) mengubah gambar menjadi sidik visual 384 angka, lalu membandingkannya dengan semua foto sumber. Berikut tiga yang paling mirip.</p>
+      <ol id="cands" class="clean" style="margin-top:18px"></ol>
+      <div class="two" style="margin-top:18px">
+        <div class="stat"><small>Kemiripan tertinggi</small><div id="sim1">—</div></div>
+        <div class="stat"><small>Selisih dengan peringkat 2</small><div id="marg">—</div></div>
+      </div>
+    </section>
+
+    <section data-step="5" hidden>
+      <h2>Tahap 5 · Skor keyakinan (Calibrated Fusion)</h2>
+      <p class="lead">Kemiripan dan selisih diubah menjadi satu skor keyakinan oleh regresi logistik terkalibrasi. Hasil DINOv2 hanya diterima bila skor melewati ambang.</p>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:18px"><b>Skor keyakinan</b><span id="pTxt" class="big" style="font-size:32px">—</span></div>
+      <div class="gauge" style="margin-top:10px"><i id="pBar"></i><b id="thMark"></b></div>
+      <div class="scale" style="margin-top:8px"><span>0%</span><span id="thTxt">Ambang</span><span>100%</span></div>
+      <p id="calMsg" style="font-size:14px;line-height:1.55"></p>
+      <div class="try">
+        <b style="font-size:14px">Simulasi: geser untuk melihat pengaruhnya</b>
+        <span style="font-size:12px;color:#586172">Hanya untuk penjelasan; keputusan di tahap 6 tetap memakai nilai asli.</span>
+        <div><label for="sSim"><span>Kemiripan tertinggi</span><span id="sSimV" class="mono"></span></label><input id="sSim" type="range" min="0" max="100"></div>
+        <div><label for="sMar"><span>Selisih dengan peringkat 2</span><span id="sMarV" class="mono"></span></label><input id="sMar" type="range" min="0" max="100"></div>
+        <div style="font-size:14px">Skor simulasi: <b id="sP"></b></div>
+        <button id="sReset" class="btn sm" type="button" style="align-self:flex-start">Kembalikan ke nilai asli</button>
+      </div>
+    </section>
+
+    <section data-step="6" hidden>
+      <h2>Tahap 6 · Hasil akhir</h2>
+      <div id="verdict" class="verdict" style="margin-top:18px"></div>
+      <div id="recap" class="recap" style="margin-top:18px"></div>
+      <p class="note" style="margin-top:18px">Dasar penelitian: pada uji akhir 120 gambar, sistem menerima 120 gambar dengan 0 salah terima. Ambang kalibrasi masih bersifat awal karena data kesalahan untuk kalibrasi sangat sedikit.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <button id="dl" class="btn sm" type="button">Unduh laporan (JSON)</button>
+        <button id="again" class="btn sm" type="button">Periksa gambar lain</button>
+      </div>
+    </section>
+
+    <div class="foot">
+      <button id="back" class="btn" type="button">Kembali</button>
+      <button id="next" class="btn pri" type="button">Proses gambar</button>
+    </div>
+  </main>
+</div>
+</div>
+
+<script>
+const CAL = {mean:[0.8493215701409749,0.5978015090738024], scale:[0.19977869749200522,0.21465717819203836], coef:[0.9661238232400142,0.6157026671969372], b:5.680877233647974, th:0.8239188648215766};
+const TITLES = ['Unggah Foto','Persiapan Gambar','Cek Watermark','Pencocokan Visual','Skor Keyakinan','Hasil Akhir'];
+const RULES = {
+  tm_dino_agree: 'Watermark dan DINOv2 sepakat',
+  tm_dino_conflict: 'Watermark dan DINOv2 bertentangan',
+  tm_missing_score_ge_threshold: 'Watermark tidak dipakai, skor DINOv2 di atas ambang',
+  tm_missing_score_below_threshold: 'Watermark tidak dipakai, skor DINOv2 di bawah ambang',
+  insufficient_evidence: 'Bukti tidak cukup'
+};
+const TM_STATUS = {
+  TIDAK_TERDETEKSI: 'Watermark tidak terdeteksi',
+  SCHEMA_TIDAK_SESUAI: 'Watermark terbaca tapi formatnya tidak sesuai',
+  KODE_TIDAK_DIKENAL: 'Kode watermark tidak ada di daftar foto sumber'
+};
+const $ = (id) => document.getElementById(id);
+const fmt = (x, d=3) => x.toFixed(d).replace('.', ',');
+const pct = (x) => fmt(x*100, 1) + '%';
+const score = (s, m) => 1/(1+Math.exp(-(CAL.b + CAL.coef[0]*(s-CAL.mean[0])/CAL.scale[0] + CAL.coef[1]*(m-CAL.mean[1])/CAL.scale[1])));
+
+let step = 1, maxStep = 1, file = null, url = null, R = null, busy = false;
+
+function renderNav(){
+  $('nav').innerHTML = '';
+  TITLES.forEach((t, i) => {
+    const n = i+1, b = document.createElement('button');
+    b.type = 'button'; b.disabled = n > maxStep;
+    if (n === step) b.setAttribute('aria-current','step');
+    if (n <= maxStep && n !== step && maxStep > 1) b.classList.add('done');
+    b.innerHTML = `<span class="dot">${b.classList.contains('done') ? '✓' : n}</span><span class="lbl"><small>TAHAP ${n}</small><span>${t}</span></span>`;
+    b.onclick = () => go(n);
+    $('nav').appendChild(b);
+  });
+}
+function go(n){
+  step = n;
+  document.querySelectorAll('section[data-step]').forEach(s => s.hidden = Number(s.dataset.step) !== n);
+  $('back').disabled = n === 1 || busy;
+  $('next').hidden = n === 6;
+  $('next').disabled = busy || (n === 1 && !file);
+  $('next').innerHTML = busy ? '<span class="spin"></span>Memproses tahap 2–5…' : (n === 1 ? (R ? 'Lanjut' : 'Proses gambar') : n === 5 ? 'Lihat hasil' : 'Lanjut');
+  renderNav();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function setFile(f){
+  if (!f || !f.type.startsWith('image/')) { showErr('Pilih berkas gambar.'); return; }
+  if (url) URL.revokeObjectURL(url);
+  file = f; url = URL.createObjectURL(f); R = null; maxStep = 1;
+  $('pv').src = url; $('pv').hidden = false; $('pvEmpty').hidden = true; $('crop').src = url;
+  $('fName').textContent = f.name;
+  $('fSize').textContent = f.size > 1048576 ? fmt(f.size/1048576, 2) + ' MB' : Math.round(f.size/1024) + ' KB';
+  $('fDims').textContent = 'membaca…';
+  const im = new Image(); im.onload = () => $('fDims').textContent = im.naturalWidth + ' × ' + im.naturalHeight + ' px'; im.src = url;
+  showErr(''); go(1);
+}
+function showErr(m){ $('err').textContent = m; $('err').hidden = !m; }
+
+async function run(){
+  busy = true; go(1);
+  try {
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('api/verify', {method: 'POST', body: fd});
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(j.detail || ('HTTP ' + res.status));
+    R = j; fill(); maxStep = 6; busy = false; go(2);
+  } catch (e) {
+    busy = false; showErr('Gagal memproses: ' + e.message); go(1);
+  }
+}
+
+function fill(){
+  const p2 = R.stage2_prepare, t = R.stage3_trustmark, d = R.stage4_dinov2, c = R.stage5_calibration, v = R.stage6_decision;
+  $('sha').textContent = p2.sha256;
+  $('fDims').textContent = p2.width + ' × ' + p2.height + ' px';
+
+  if (t.status === 'KODE_COCOK') {
+    $('tmBox').className = 'box ok';
+    $('tmBox').innerHTML = `<div class="tag">WATERMARK TERBACA</div><div class="big">Menunjuk Foto Sumber ${t.source.number}</div><div style="font-size:14px">Kode 61 bit cocok dengan sidik jari foto sumber ${t.source.source_id}.</div>`;
+  } else {
+    $('tmBox').className = 'box warn';
+    $('tmBox').innerHTML = `<div class="tag">${TM_STATUS[t.status].toUpperCase()}</div><div class="big">Watermark tidak bisa dipakai</div><div style="font-size:14px">Tidak apa-apa. Sistem lanjut ke pencocokan visual di tahap 4.</div>`;
+  }
+  $('tmRaw').textContent = JSON.stringify({status: t.status, detected: t.detected, schema: t.schema, payload: t.payload, detik: t.seconds}, null, 1);
+
+  $('cands').innerHTML = d.top.map((x, i) => `<li class="cand"><span class="rank">#${x.rank}</span><div><b>Foto Sumber ${x.number}</b> <span style="font-size:12px;color:#586172" class="mono">${x.source_id}</span><div class="bar"><i style="width:${Math.max(2, x.similarity*100)}%;background:${i ? '#AEB8C8' : '#2350C8'}"></i></div></div><span class="mono" style="text-align:right">${fmt(x.similarity)}</span></li>`).join('');
+  $('sim1').textContent = fmt(d.similarity_top1); $('marg').textContent = fmt(d.margin_top1_top2);
+
+  const ok = c.score >= c.threshold, col = ok ? '#1E7247' : '#9A4A06';
+  $('pTxt').textContent = pct(c.score); $('pTxt').style.color = col;
+  $('pBar').style.width = (c.score*100) + '%'; $('pBar').style.background = col;
+  $('thMark').style.left = (c.threshold*100) + '%'; $('thTxt').textContent = 'Ambang ' + pct(c.threshold);
+  $('calMsg').textContent = !c.used_for_decision
+    ? 'Watermark sudah menunjuk foto sumber di tahap 3, jadi keputusan diambil dari aturan watermark. Skor ini hanya informasi.'
+    : ok ? `Skor melewati ambang, jadi Foto Sumber ${d.top[0].number} dapat diterima.` : 'Skor belum melewati ambang, jadi sistem akan menahan keputusan.';
+  resetSim();
+
+  const tmTxt = t.status === 'KODE_COCOK' ? 'Terbaca → Foto Sumber ' + t.source.number : TM_STATUS[t.status];
+  let reason;
+  if (v.rule === 'tm_dino_agree') reason = `Watermark TrustMark dan pencocokan DINOv2 sama-sama menunjuk Foto Sumber ${v.source.number}.`;
+  else if (v.rule === 'tm_dino_conflict') reason = `Watermark menunjuk Foto Sumber ${t.source.number}, sedangkan DINOv2 menunjuk Foto Sumber ${d.top[0].number}. Karena buktinya bertentangan, keputusan diserahkan ke pemeriksa.`;
+  else if (v.rule === 'tm_missing_score_ge_threshold') reason = `Watermark tidak bisa dipakai, tetapi skor keyakinan DINOv2 ${pct(c.score)} melewati ambang ${pct(c.threshold)}.`;
+  else if (v.rule === 'tm_missing_score_below_threshold') reason = `Watermark tidak bisa dipakai dan skor keyakinan DINOv2 hanya ${pct(c.score)}, di bawah ambang ${pct(c.threshold)}. Sistem memilih menahan keputusan daripada menebak.`;
+  else reason = 'Bukti yang tersedia tidak cukup untuk mengambil keputusan.';
+  const acc = v.verdict === 'ACCEPT';
+  $('verdict').className = 'verdict ' + (acc ? 'ok' : 'warn');
+  $('verdict').innerHTML = acc
+    ? `<span class="ic" aria-hidden="true">✓</span><div><div class="tag" style="color:#1E7247">DITERIMA</div><h3>Gambar ini berasal dari Foto Sumber ${v.source.number}</h3><div style="font-size:15px;line-height:1.55">${reason}</div></div>`
+    : `<span class="ic" aria-hidden="true">Ⅱ</span><div><div class="tag" style="color:#9A4A06">DITAHAN · PERLU CEK MANUAL</div><h3>Sistem belum berani menentukan asal gambar</h3><div style="font-size:15px;line-height:1.55">${reason}</div></div>`;
+  $('recap').innerHTML = [
+    ['Tahap 3 · Watermark', tmTxt],
+    ['Tahap 4 · DINOv2 peringkat 1', `Foto Sumber ${d.top[0].number} (kemiripan ${fmt(d.similarity_top1)})`],
+    ['Tahap 4 · Selisih peringkat 1–2', fmt(d.margin_top1_top2)],
+    ['Tahap 5 · Skor keyakinan', `${pct(c.score)} (ambang ${pct(c.threshold)})`],
+    ['Aturan yang dipakai', RULES[v.rule]],
+    ['Waktu proses', fmt(R.seconds_total, 2) + ' detik']
+  ].map(([k, x]) => `<div><span>${k}</span><b>${x}</b></div>`).join('');
+}
+
+function resetSim(){
+  $('sSim').value = Math.round(R.stage4_dinov2.similarity_top1*100);
+  $('sMar').value = Math.round(R.stage4_dinov2.margin_top1_top2*100);
+  updSim();
+}
+function updSim(){
+  const s = $('sSim').value/100, m = Math.min($('sMar').value/100, s);
+  $('sSimV').textContent = fmt(s); $('sMarV').textContent = fmt(m);
+  const p = score(s, m);
+  $('sP').textContent = pct(p) + (p >= CAL.th ? ' → di atas ambang' : ' → di bawah ambang');
+}
+
+$('file').onchange = (e) => setFile(e.target.files[0]);
+const drop = $('drop');
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => setFile(e.dataTransfer.files[0]));
+$('next').onclick = () => { if (step === 1 && !R) return run(); const n = Math.min(6, step+1); maxStep = Math.max(maxStep, n); go(n); };
+$('back').onclick = () => go(Math.max(1, step-1));
+$('sSim').oninput = updSim; $('sMar').oninput = updSim; $('sReset').onclick = resetSim;
+$('again').onclick = () => { file = null; R = null; maxStep = 1; $('file').value = ''; $('pv').hidden = true; $('pvEmpty').hidden = false; ['fName','fSize','fDims'].forEach(i => $(i).textContent = '—'); go(1); };
+$('dl').onclick = () => {
+  const b = new Blob([JSON.stringify(R, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'jatikarya_' + (file ? file.name.replace(/\.[^.]+$/, '') : 'hasil') + '.json'; a.click();
+};
+
+fetch('api/health').then(r => r.json()).then(h => {
+  if (h.ready) { $('srv').className = 'status ok'; $('srv').textContent = `Server siap · ${h.candidates} foto sumber · ${h.device.toUpperCase()}`; $('nCand').textContent = h.candidates; }
+  else { $('srv').className = 'status bad'; $('srv').textContent = 'Model belum siap: ' + h.error; }
+}).catch(() => { $('srv').className = 'status bad'; $('srv').textContent = 'Server tidak terhubung. Jalankan notebook Colab dulu.'; });
+go(1);
+</script>
+</body>
+</html>
